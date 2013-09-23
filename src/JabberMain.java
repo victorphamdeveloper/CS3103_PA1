@@ -64,6 +64,7 @@ public class JabberMain {
 		            	System.out.println(connection.contactList.get(i).toString());
 		            
             	}else if(curr.equals("")){
+            		connection.sendMessage("teammatesinstructor@gmail.com");
             		break;
             	}
             }

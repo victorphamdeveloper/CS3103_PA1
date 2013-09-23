@@ -145,6 +145,7 @@ class XmppConnection {
         StringBuilder sb = new StringBuilder();
         sb.append( "<message" );
         sb.append( " from=\"" ).append( jid.getJabberID() ).append("/").append(jid.getResource()).append( "\"" );
+        sb.append( " id=\"" ).append( "saddasdas" ).append( "\"" );
         sb.append( " to=\"" ).append( receiver ).append( "\"" );
         sb.append( " type=\"").append( "chat").append( "\"" );
         sb.append( " xml:lang=\"en\">" );
@@ -164,7 +165,7 @@ class XmppConnection {
     			StringBuilder sb = new StringBuilder();
     			sb.append( "<iq" );
     			sb.append( " from=\"" ).append( jid.getJabberID() ).append("/").append(jid.getResource()).append( "\"" );
-    			sb.append( " id=\"" ).append( "saddasdas" ).append( "\"" );
+    			//sb.append( " id=\"" ).append( "saddasdas" ).append( "\"" );
     			sb.append( " type=\"").append( "get" ).append( "\">" );
     			sb.append( " <query xmlns=\"jabber:iq:roster\"/> " );
     			sb.append( "</iq>" );
@@ -294,6 +295,7 @@ class XmppConnection {
 
                 // Case 7: IQ tag (for resource ID request's response)
                 else if ( parser.getLocalName().equals( "iq" ) ) {
+                	System.out.println("Id is "+parser.getAttributeValue(1));
                     handleIQTag();
 
                     // Return, we have successfully opened the connection
