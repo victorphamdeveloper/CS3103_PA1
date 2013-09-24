@@ -137,19 +137,28 @@ class XmppConnection {
         writer = new BufferedWriter( new OutputStreamWriter( socket.getOutputStream() , 
                                                              "UTF-8" ) );
     }
-
-    public void sendMessage(String receiver ) 
+    public void sendPresence() throws IOException {
+    	StringBuilder sb = new StringBuilder();
+        sb.append( "<presence/>" );
+        String message = sb.toString();
+        System.out.println("Send presence signal");
+        writer.write(message);
+        writer.flush();
+        
+    }
+    public void sendMessage(String receiver, String content ) 
     		throws IOException {
     	// Use a StringBuilder since it is much more 
         //  efficient than string concatenation
         StringBuilder sb = new StringBuilder();
         sb.append( "<message" );
         sb.append( " from=\"" ).append( jid.getJabberID() ).append("/").append(jid.getResource()).append( "\"" );
-        sb.append( " id=\"" ).append( "saddasdas" ).append( "\"" );
+        //sb.append( " id=\"" ).append( "saddasdas" ).append( "\"" );
         sb.append( " to=\"" ).append( receiver ).append( "\"" );
         sb.append( " type=\"").append( "chat").append( "\"" );
         sb.append( " xml:lang=\"en\">" );
-        sb.append( " <body>Hello</body> " );
+        sb.append( " <subject>I implore you!</subject>" );
+        sb.append( " <body>" + content + "</body> " );
         sb.append( "</message>" );
         String message = sb.toString();
 		System.out.println(message);
@@ -173,10 +182,9 @@ class XmppConnection {
         
     			writer.write(message);
     			writer.flush();
-        
     			getRosterTag = handleServerStream();
     		}
-    	} catch (XMLStreamException e) {
+    	} catch (Exception e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
 		}
@@ -295,7 +303,6 @@ class XmppConnection {
 
                 // Case 7: IQ tag (for resource ID request's response)
                 else if ( parser.getLocalName().equals( "iq" ) ) {
-                	System.out.println("Id is "+parser.getAttributeValue(1));
                     handleIQTag();
 
                     // Return, we have successfully opened the connection
@@ -720,7 +727,7 @@ class XmppConnection {
     }
 
     /** Handles the IQ tag. */
-    private void handleIQTag() 
+    public void handleIQTag() 
         throws IOException , XMLStreamException {
 
         // DEBUG
@@ -760,7 +767,7 @@ class XmppConnection {
         }
     }
     
-    private void handleIQQueryTag() throws XMLStreamException {
+    public void handleIQQueryTag() throws XMLStreamException {
     	 System.out.println( "Handling server's IQ Query tag" );
          boolean done = false;
 
@@ -838,11 +845,11 @@ class XmppConnection {
     /** Socket used to connect to the server. */
     private Socket socket;
     /** Socket Reader. */
-    private BufferedReader reader;
+    public static BufferedReader reader;
     /** Socket writer. */
     private BufferedWriter writer;
     /** XML Pull-parser. */
-    private XMLStreamReader parser;
+    public static XMLStreamReader parser;
 
     /** Stream ID. */
     private String streamID;

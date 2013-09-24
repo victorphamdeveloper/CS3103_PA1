@@ -52,9 +52,12 @@ public class JabberMain {
             
             // Connect to the Jabber server
             connection.connect();
+            connection.sendPresence();
             InputStreamReader isr = new InputStreamReader(System.in);
             BufferedReader br = new BufferedReader(isr);
             String curr;
+            Thread t = new Thread(new MessageListener());
+            t.start();
             while(true){
             	curr = br.readLine();
             	if(curr.equals("@roster")){
@@ -63,9 +66,17 @@ public class JabberMain {
 		            for(int i=0;i<connection.contactList.size();i++)
 		            	System.out.println(connection.contactList.get(i).toString());
 		            
-            	}else if(curr.equals("")){
-            		connection.sendMessage("teammatesinstructor@gmail.com");
+            	}else if(curr.startsWith("@chat")){
+            		receiver = curr.substring(6);
+            		
+            	}else if(curr.equals("end")){
             		break;
+            	}else{
+            		if(receiver == null)
+            			System.out.println("Please specify a buddy to chat with");
+            		else
+            			connection.sendMessage(receiver,curr);
+            			
             	}
             }
             // Write code here for the assignment's three tasks...
@@ -122,4 +133,5 @@ public class JabberMain {
 
     /** XMPP connection. */
     private static XmppConnection connection = null;
+    private static String receiver = null;
 }
