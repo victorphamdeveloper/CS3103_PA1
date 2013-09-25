@@ -167,10 +167,9 @@ class XmppConnection {
         System.out.println("Send message from "+jid.getJabberID()+"/"+jid.getResource()+" to "+receiver);
     }
     public void getRosterList() throws IOException {
+
     	try {
-    		boolean getRosterTag = true;
         
-    		while ( getRosterTag ) {
     			StringBuilder sb = new StringBuilder();
     			sb.append( "<iq" );
     			sb.append( " from=\"" ).append( jid.getJabberID() ).append("/").append(jid.getResource()).append( "\"" );
@@ -179,11 +178,8 @@ class XmppConnection {
     			sb.append( " <query xmlns=\"jabber:iq:roster\"/> " );
     			sb.append( "</iq>" );
     			String message = sb.toString();
-        
     			writer.write(message);
     			writer.flush();
-    			getRosterTag = handleServerStream();
-    		}
     	} catch (Exception e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
@@ -727,7 +723,7 @@ class XmppConnection {
     }
 
     /** Handles the IQ tag. */
-    public void handleIQTag() 
+    private void handleIQTag() 
         throws IOException , XMLStreamException {
 
         // DEBUG
@@ -749,9 +745,7 @@ class XmppConnection {
                 if ( parser.getLocalName().equals( "bind" ) ) {
                     handleIQBindTag();
                 }
-                else if ( parser.getLocalName().equals("query") ){
-                	handleIQQueryTag();
-                }
+                
                 // Case 2: Error tag
                 else if ( parser.getLocalName().equals( "error" ) ) {
                     // This is not really an IOException, we need to 
@@ -766,8 +760,8 @@ class XmppConnection {
             }
         }
     }
-    
-    public void handleIQQueryTag() throws XMLStreamException {
+    /*
+    private void handleIQQueryTag() throws XMLStreamException {
     	 System.out.println( "Handling server's IQ Query tag" );
          boolean done = false;
 
@@ -775,7 +769,7 @@ class XmppConnection {
 
              // Get the next XML event from the parser
              int eventType = parser.next();
-
+             System.out.println("IQ query: "+eventType);
              // Check if the parse event is a XML start tag	
              if ( eventType == XMLStreamConstants.START_ELEMENT ) {
 
@@ -793,7 +787,7 @@ class XmppConnection {
          }
     	 
     }
-
+*/
     /** Handles the IQ Bind tag. */
     private void handleIQBindTag() 
         throws IOException , XMLStreamException {
@@ -864,7 +858,7 @@ class XmppConnection {
     /** List of supported SASL authentication mechanisms. */
     private List <String> mechanismList = 
         new ArrayList <String>();
-    public List <String> contactList = 
+    public static List <String> contactList = 
             new ArrayList <String>();
     /** SASL Client. */
     private SaslClient sc;

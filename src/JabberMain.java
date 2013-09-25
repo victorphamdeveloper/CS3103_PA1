@@ -62,10 +62,7 @@ public class JabberMain {
             	curr = br.readLine();
             	if(curr.equals("@roster")){
 		            connection.getRosterList();
-		            System.out.println("ContactList: "+connection.contactList.size());
-		            for(int i=0;i<connection.contactList.size();i++)
-		            	System.out.println(connection.contactList.get(i).toString());
-		            
+		           
             	}else if(curr.startsWith("@chat")){
             		receiver = curr.substring(6);
             		
